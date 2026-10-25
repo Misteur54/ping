@@ -148,7 +148,7 @@ body{margin:0;background:var(--bg);color:var(--text);font-family:var(--f-body);f
   <header class="top">
     <div class="top-row">
       <div class="day" id="day" aria-live="polite">JOUR <b>1</b>/26</div>
-      <button class="snd" id="snd" type="button" aria-pressed="false">Son off</button>
+      <div style="display:flex;gap:8px"><button class="snd" id="lang" type="button" aria-label="Changer de langue / Cambiar idioma">ES</button><button class="snd" id="snd" type="button" aria-pressed="false">Son off</button></div>
     </div>
     <div class="bar"><i id="bar"></i></div>
     <div class="dots" id="dots" aria-hidden="true"></div>
@@ -240,19 +240,89 @@ const CONFIG = {
         { who: "moi", t: "Et Léo, merci d'avoir souffert avec moi à chaque séance." },
         { who: "narr", t: "On remet ça quand vous voulez." }
       ] }
+  ],
+  CHAPTERS_ES: [
+    { day: 1, place: "Luxemburgo", title: "La salida", sub: "Maleta, pala, despegue", scene: "plane", photo: "photos/chapitre1.jpg",
+      lines: [
+        { who: "narr", t: "Luxemburgo, muy temprano por la mañana." },
+        { who: "moi", t: "Pala lista. Gomas listas. Zapatillas listas. Moral: a tope." },
+        { who: "moi", t: "Rumbo a Madrid. 26 días de ping. ¡Vamos!" }
+      ] },
+    { day: 1, place: "Madrid", title: "Aterrizaje", sub: "Sol, calor, ping", scene: "land", photo: "photos/chapitre2.jpg",
+      lines: [
+        { who: "narr", t: "Madrid. Ya hace calor, y solo es el primer día." },
+        { who: "moi", t: "¡He aterrizado! Aquí el sol pega fuerte." },
+        { who: "chris", t: "Bienvenido a España, hermano. Prepárate, vas a sufrir." }
+      ] },
+    { day: 2, place: "Madrid", title: "Con Chris", sub: "Arreglando el mundo", scene: "chat", photo: "photos/chapitre3.jpg",
+      lines: [
+        { who: "chris", t: "¿Qué, el nivel de aquí te da miedo?" },
+        { who: "moi", t: "Miedo no. Pero ya he entendido que mi revés va a sufrir." },
+        { who: "chris", t: "Tu revés sufre desde 2019, no es nada nuevo." },
+        { who: "moi", t: "Gracias por el apoyo, de verdad." },
+        { who: "narr", t: "Conversaciones así, hubo todas las noches." }
+      ] },
+    { day: 5, place: "Sala de entrenamiento", title: "Todos los días", sub: "Cinco horas diarias", scene: "table", photo: "photos/chapitre4.jpg",
+      lines: [
+        { who: "nelson", t: "Otra vez. Más bajo de piernas. Venga." },
+        { who: "leo", t: "Vamos, una última serie y a comer." },
+        { who: "nelson", t: "Eso lo ha dicho hace cuarenta minutos." },
+        { who: "moi", t: "Mis piernas ya no son mías." },
+        { who: "narr", t: "Entrenamiento todos los días. Unas cinco horas. Sin excepción." }
+      ] },
+    { day: 9, place: "El salón", title: "Mi cuartel", sub: "Sofá, manta, despertador", scene: "sofa", photo: "photos/chapitre5.jpg",
+      lines: [
+        { who: "narr", t: "Mi habitación durante el stage: el salón." },
+        { who: "moi", t: "Sinceramente, este sofá es el mejor hotel de España." },
+        { who: "leo", t: "¡Arriba! Salimos en diez minutos." },
+        { who: "moi", t: "Cinco minutitos más… zzz" }
+      ] },
+    { day: 14, place: "En coche", title: "El Clio rojo", sub: "Dos palomas, cero supervivientes", scene: "clio", photo: "photos/chapitre6.jpg",
+      lines: [
+        { who: "narr", t: "Ese día, Nelson coge el volante del Clio rojo." },
+        { who: "nelson", t: "Tranquilos, me sé el camino." },
+        { who: "narr", t: "Dos palomas cruzan. No deberían haberlo hecho." },
+        { who: "moi", t: "¡¿NELSON?!" },
+        { who: "nelson", t: "Estaban avisadas." },
+        { who: "narr", t: "Resultado final: Palomas 0, Clio 2. Todavía nos reímos." }
+      ] },
+    { day: 20, place: "Barcelona → Perpiñán", title: "Rumbo al torneo", sub: "Último esfuerzo, competición", scene: "road", photo: "photos/chapitre7.jpg",
+      lines: [
+        { who: "narr", t: "Después de Madrid, rumbo a Barcelona y luego al torneo de Perpiñán." },
+        { who: "nelson", t: "Has currado. Ahora juega suelto." },
+        { who: "moi", t: "Si voy ganando, acelero." }
+      ] },
+    { day: 26, place: "Fin del stage", title: "Gracias, chicos", sub: "Chris, Nelson, Léo", scene: "end", photo: "photos/chapitre8.jpg",
+      lines: [
+        { who: "narr", t: "26 días. Horas de ping, risas sin parar, un sofá y dos palomas." },
+        { who: "moi", t: "Chris, gracias por acogerme, por las charlas y por las bromas. Hiciste este mes inolvidable." },
+        { who: "moi", t: "Nelson, gracias por el coaching, la paciencia y la conducción… memorable." },
+        { who: "moi", t: "Y Léo, gracias por sufrir conmigo en cada sesión." },
+        { who: "narr", t: "Repetimos cuando queráis." }
+      ] }
   ]
 };
 
 (() => {
   const $ = s => document.querySelector(s);
   const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const CH = CONFIG.CHAPTERS;
+  const T = {
+    fr: { day:"JOUR", next:"Suivant", nextCh:"Chapitre suivant", replay:"Revivre le voyage", sOn:"Son on", sOff:"Son off", me:"Moi", prev:"Chapitre précédent",
+      lux:"LUXEMBOURG", mad:"MADRID", days:"JOURS", hours:"HEURES DE PING", trio:"NELSON · LÉO · MOI", pouf:"POUF !", score:"PIGEONS 0 – CLIO 2",
+      bcn:"BARCELONE", perp:"PERPIGNAN", tourn:"TOURNOI DE PERPIGNAN", other:"ES" },
+    es: { day:"DÍA", next:"Siguiente", nextCh:"Siguiente capítulo", replay:"Revivir el viaje", sOn:"Sonido sí", sOff:"Sonido no", me:"Yo", prev:"Capítulo anterior",
+      lux:"LUXEMBURGO", mad:"MADRID", days:"DÍAS", hours:"HORAS DE PING", trio:"NELSON · LÉO · YO", pouf:"¡PUF!", score:"PALOMAS 0 – CLIO 2",
+      bcn:"BARCELONA", perp:"PERPIÑÁN", tourn:"TORNEO DE PERPIÑÁN", other:"FR" }
+  };
+  let lang = (()=>{ try{ const v = localStorage.getItem("m26_lang"); if(v==="fr"||v==="es") return v; }catch(e){} return (navigator.language||"").toLowerCase().startsWith("es") ? "es" : "fr"; })();
+  const L = () => T[lang];
+  let CH = lang === "es" ? CONFIG.CHAPTERS_ES : CONFIG.CHAPTERS;
   const store = { get(k){try{return localStorage.getItem(k)}catch(e){return null}}, set(k,v){try{localStorage.setItem(k,v)}catch(e){}} };
 
   /* ---------- Son ---------- */
   let ac = null, soundOn = false;
   $("#snd").addEventListener("click", e=>{
-    e.stopPropagation(); soundOn = !soundOn; e.currentTarget.setAttribute("aria-pressed", soundOn); e.currentTarget.textContent = soundOn ? "Son on" : "Son off";
+    e.stopPropagation(); soundOn = !soundOn; e.currentTarget.setAttribute("aria-pressed", soundOn); e.currentTarget.textContent = soundOn ? L().sOn : L().sOff;
     if(soundOn && !ac){ try{ ac = new (window.AudioContext||window.webkitAudioContext)(); }catch(err){} }
     if(ac && ac.state === "suspended") ac.resume();
     tone(700,.06);
@@ -282,9 +352,9 @@ const CONFIG = {
         <path id="route1" d="M268 64 C 220 40, 120 60, 92 140" fill="none" stroke="#2f6bff" stroke-width="3" class="draw"/>
         <path d="M268 64 C 220 40, 120 60, 92 140" fill="none" stroke="#f1f2f5" stroke-width="1.5" class="dash" opacity=".35"/>
         <g class="pop" style="animation-delay:.1s"><circle cx="268" cy="64" r="7" fill="#2f6bff"/><circle cx="268" cy="64" r="14" fill="none" stroke="#2f6bff" class="wave"/></g>
-        <text x="278" y="58" fill="#f1f2f5" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" letter-spacing="1.5">LUXEMBOURG</text>
+        <text x="278" y="58" fill="#f1f2f5" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" letter-spacing="1.5">${L().lux}</text>
         <g class="pop" style="animation-delay:2.4s"><circle cx="92" cy="140" r="7" fill="#e8263a"/><circle cx="92" cy="140" r="14" fill="none" stroke="#e8263a" class="wave"/></g>
-        <text x="60" y="170" fill="#e8263a" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" letter-spacing="1.5">MADRID</text>
+        <text x="60" y="170" fill="#e8263a" font-family="Barlow Condensed, sans-serif" font-weight="700" font-size="15" letter-spacing="1.5">${L().mad}</text>
         <g>
           <path d="M-12 0 L12 0 L4 -3 L-2 -12 L-6 -12 L-2 -3 L-10 -3 L-13 -7 L-16 -7 L-14 0 L-16 7 L-13 7 L-10 3 L-2 3 L-6 12 L-2 12 L4 3 L12 0" fill="#f1f2f5"/>
           <animateMotion dur="2.6s" fill="freeze" rotate="auto" keyPoints="0;1" keyTimes="0;1" calcMode="spline" keySplines=".4 0 .4 1" begin="0.2s">
@@ -327,11 +397,11 @@ const CONFIG = {
         <g class="padR"><circle cx="326" cy="122" r="16" fill="#111"/><rect x="336" y="118" width="14" height="8" rx="3" fill="#b07a4a"/></g>
         <g transform="translate(70 118)"><circle class="ball" r="6" fill="#ff8a1f"/></g>
         <g font-family="Barlow Condensed, sans-serif" font-weight="700" text-anchor="middle">
-          <text x="110" y="38" fill="#8f97ab" font-size="12" letter-spacing="2">JOURS</text>
+          <text x="110" y="38" fill="#8f97ab" font-size="12" letter-spacing="2">${L().days}</text>
           <text x="110" y="24" fill="#f1f2f5" font-family="Anton, sans-serif" font-size="22" data-count="26">0</text>
-          <text x="250" y="38" fill="#8f97ab" font-size="12" letter-spacing="2">HEURES DE PING</text>
+          <text x="250" y="38" fill="#8f97ab" font-size="12" letter-spacing="2">${L().hours}</text>
           <text x="250" y="24" fill="#e8263a" font-family="Anton, sans-serif" font-size="22" data-count="130">0</text>
-          <text x="180" y="210" fill="#8f97ab" font-size="13" letter-spacing="2">NELSON · LÉO · MOI</text>
+          <text x="180" y="210" fill="#8f97ab" font-size="13" letter-spacing="2">${L().trio}</text>
         </g>
       </svg>`,
     sofa: () => `
@@ -378,14 +448,14 @@ const CONFIG = {
         </g>
         <g transform="translate(272 128)"><g class="pouf">
           <path d="M0 -40 L10 -14 L38 -22 L18 -2 L40 16 L12 14 L6 40 L-6 16 L-34 26 L-18 2 L-40 -14 L-12 -12 Z" fill="#f5c542"/>
-          <text x="0" y="6" text-anchor="middle" font-family="Anton, sans-serif" font-size="20" fill="#0d0f14">POUF !</text>
+          <text x="0" y="6" text-anchor="middle" font-family="Anton, sans-serif" font-size="20" fill="#0d0f14">${L().pouf}</text>
         </g></g>
         ${[[-60,-70,200,0],[50,-80,-160,.05],[-30,-100,120,.1],[70,-50,240,.12],[0,-110,-90,.18],[-80,-40,160,.2],[30,-60,-200,.24]].map(([x,y,r,d])=>
           `<ellipse class="feather" cx="272" cy="140" rx="8" ry="3" fill="${d>.15?"#c9cfdb":"#f1f2f5"}" style="--x:${x}px;--y:${y}px;--r:${r}deg;--d:${d}s"/>`).join("")}
         <g class="halo"><ellipse cx="240" cy="132" rx="12" ry="4" fill="none" stroke="#f5c542" stroke-width="3"/><ellipse cx="274" cy="134" rx="12" ry="4" fill="none" stroke="#f5c542" stroke-width="3"/></g>
         <g transform="translate(180 50)"><g class="score">
           <rect x="-110" y="-24" width="220" height="44" rx="10" fill="#0d0f14" stroke="#e8263a" stroke-width="3"/>
-          <text x="0" y="8" text-anchor="middle" font-family="Anton, sans-serif" font-size="24" fill="#f1f2f5">PIGEONS 0 – CLIO 2</text>
+          <text x="0" y="8" text-anchor="middle" font-family="Anton, sans-serif" font-size="24" fill="#f1f2f5">${L().score}</text>
         </g></g>
         </g>
       </svg>`,
@@ -393,12 +463,12 @@ const CONFIG = {
       <svg viewBox="0 0 360 220" class="enter">
         <path d="M30 210 C60 150 40 110 90 100 S 170 60 210 70 S 290 50 320 30" fill="none" stroke="#262c3a" stroke-width="22" stroke-linecap="round"/>
         <path id="route2" d="M30 210 C60 150 40 110 90 100 S 170 60 210 70 S 290 50 320 30" fill="none" stroke="#2f6bff" stroke-width="3" class="draw"/>
-        ${dotCity(56,150,"MADRID","#8f97ab",.1)}${dotCity(210,70,"BARCELONE","#2f6bff",1.2)}${dotCity(320,30,"PERPIGNAN","#e8263a",2.3)}
+        ${dotCity(56,150,L().mad,"#8f97ab",.1)}${dotCity(210,70,L().bcn,"#2f6bff",1.2)}${dotCity(320,30,L().perp,"#e8263a",2.3)}
         <g><circle r="8" fill="#ff8a1f"/><path d="M-4 -3a5 5 0 0 1 6 -2" stroke="#fff" stroke-width="2" fill="none" opacity=".7"/>
           <animateMotion dur="2.6s" fill="freeze" begin="0.3s"><mpath href="#route2"/></animateMotion></g>
         <g transform="translate(110 170)"><g class="pop" style="animation-delay:2.7s">
           <rect x="-70" y="-20" width="190" height="34" rx="8" fill="#e8263a"/>
-          <text x="25" y="4" text-anchor="middle" font-family="Anton, sans-serif" font-size="18" fill="#fff">TOURNOI DE PERPIGNAN</text>
+          <text x="25" y="4" text-anchor="middle" font-family="Anton, sans-serif" font-size="18" fill="#fff">${L().tourn}</text>
         </g></g>
       </svg>`,
     end: () => `
@@ -443,7 +513,7 @@ const CONFIG = {
     clearTimeout(typing); clearTimeout(auto); sfx.forEach(clearTimeout); sfx = []; typing = auto = null;
     ci = i; li = 0; store.set("m26_ch", ci);
     const c = CH[ci];
-    $("#day").innerHTML = `JOUR <b>${c.day}</b>/26`;
+    $("#day").innerHTML = `${L().day} <b>${c.day}</b>/26`;
     $("#bar").style.width = (c.day/26*100) + "%";
     [...dots.children].forEach((d,k)=>{ d.className = k < ci ? "on" : k === ci ? "cur" : ""; });
     const sc = $("#scene"); sc.innerHTML = S[c.scene]();
@@ -462,10 +532,10 @@ const CONFIG = {
   function setNext(){
     const c = CH[ci], done = li >= c.lines.length && !typing;
     nextBtn.classList.toggle("ready", done);
-    nextBtn.textContent = !done ? "Suivant" : (ci < CH.length-1 ? "Chapitre suivant" : "Revivre le voyage");
+    nextBtn.textContent = !done ? L().next : (ci < CH.length-1 ? L().nextCh : L().replay);
   }
   function bubble(line){
-    const p = CONFIG.PEOPLE[line.who] || {name:"", color:"#8f97ab"};
+    const base = CONFIG.PEOPLE[line.who] || {name:"", color:"#8f97ab"}; const p = line.who === "moi" ? {...base, name:L().me} : base;
     const m = document.createElement("div");
     m.className = "msg" + (line.who === "moi" ? " me" : line.who === "narr" ? " narr" : "");
     if(line.who === "narr") m.innerHTML = `<div class="bub"></div>`;
@@ -480,7 +550,7 @@ const CONFIG = {
     const line = c.lines[li];
     if(line.who === "narr" || reduce){ place(line); return; }
     const t = document.createElement("div"); t.className = "msg typing" + (line.who==="moi" ? " me" : "");
-    const p = CONFIG.PEOPLE[line.who]; t.innerHTML = (line.who==="moi" ? "" : `<div class="av" style="background:${p.color}">${p.name.charAt(0)}</div>`) + `<div class="bub"><i></i><i></i><i></i></div>`;
+    const p = line.who === "moi" ? {...CONFIG.PEOPLE.moi, name:L().me} : CONFIG.PEOPLE[line.who]; t.innerHTML = (line.who==="moi" ? "" : `<div class="av" style="background:${p.color}">${p.name.charAt(0)}</div>`) + `<div class="bub"><i></i><i></i><i></i></div>`;
     feed.appendChild(t); scrollDown();
     typing = setTimeout(()=>{ t.remove(); typing = null; place(line); }, 650 + Math.min(900, line.t.length*12));
   }
@@ -521,6 +591,19 @@ const CONFIG = {
     box.innerHTML = h; setTimeout(()=>box.remove(), 7000);
   }
 
+  function applyLang(){
+    document.documentElement.lang = lang;
+    $("#lang").textContent = L().other;
+    $("#prev").setAttribute("aria-label", L().prev);
+    $("#snd").textContent = soundOn ? L().sOn : L().sOff;
+    CH = lang === "es" ? CONFIG.CHAPTERS_ES : CONFIG.CHAPTERS;
+  }
+  $("#lang").addEventListener("click", e=>{
+    e.stopPropagation(); lang = lang === "fr" ? "es" : "fr";
+    try{ localStorage.setItem("m26_lang", lang); }catch(err){}
+    applyLang(); tone(660,.08); render(ci);
+  });
+  applyLang();
   render(ci);
 })();
 </script>
